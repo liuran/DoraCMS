@@ -5,8 +5,8 @@ if (process.__API__) {
     api = process.__API__
 } else {
     api = process.__API__ = {
-        api: 'http://localhost:8080/api/',
-        port: 8080,
+        api: 'http://localhost:8031/api/',
+        port: 8031,
         timeout: 30000,
         cached: LRU({
             max: 1000,

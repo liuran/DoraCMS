@@ -175,9 +175,9 @@ class AdminUser {
                     errMsg = '请输入正确的用户名'
                 }
 
-                if (!fields.imageCode || fields.imageCode != req.session.imageCode) {
-                    errMsg = '请输入正确的验证码'
-                }
+                // if (!fields.imageCode || fields.imageCode != req.session.imageCode) {
+                //     errMsg = '请输入正确的验证码'
+                // }
 
                 if (errMsg) {
                     res.send({
@@ -197,7 +197,7 @@ class AdminUser {
             }
             const userObj = {
                 userName: fields.userName,
-                password: fields.password
+                // password: fields.password
             }
             try {
                 let user = await AdminUserModel.findOne(userObj).populate([{
@@ -301,6 +301,7 @@ class AdminUser {
                 userName: fields.userName,
                 name: fields.name,
                 email: fields.email,
+                logo: fields.logo,
                 phoneNum: fields.phoneNum,
                 password: fields.password,
                 confirm: fields.confirm,
@@ -347,6 +348,7 @@ class AdminUser {
                 name: fields.name,
                 email: fields.email,
                 phoneNum: fields.phoneNum,
+                logo: fields.logo,
                 password: fields.password,
                 confirm: fields.confirm,
                 group: fields.group,

@@ -21,12 +21,19 @@ module.exports = {
 	DB: 'doracms2',
 	HOST: '127.0.0.1',
 	PORT: 27017,
-	USERNAME: 'doracms',
-	PASSWORD: 'password',
+	USERNAME: 'sa',
+	PASSWORD: 'sa',
 
 	// 站点基础信息配置
 	DORACMSAPI: 'http://api.html-js.cn', // 系统服务提供商
-	SYSTEMLOGPATH: '/home/doraData/logsdir/doracms', // 服务器日志保存目录
+	SYSTEMLOGPATH: '/usr/local/var/log/doracms', // 服务器日志保存目录
+    PUBLIC_PATH : '/Users/liuran/works/adgamed_dev/flowserv/public',
+	UPLOAD_DIR: '/Users/liuran/works/adgamed_dev/flowserv/public/upload/',
+	UPLOAD_IMG_DIR : '/Users/liuran/works/adgamed_dev/flowserv/public/upload/images/',
+	UPLOAD_SMALLIMG_DIR : '/Users/liuran/works/adgamed_dev/flowserv/public/upload/smallimgs/',
+
+    imgserver_path: 'http://localhost:8030',
+
 	// 邮件相关设置
 	email_findPsd: 'findPsd',
 	email_reg_active: 'reg_active',
@@ -40,6 +47,7 @@ module.exports = {
 	system_noPower: '对不起，您无权执行该操作！',
 	system_atLeast_one: '请选择至少一项后再执行删除操作！',
 	system_batch_delete_not_allowed: '对不起，该模块不允许批量删除！'
+
 };
 
 

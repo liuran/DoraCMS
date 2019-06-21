@@ -201,8 +201,10 @@ app.get('/robots.txt', function (req, res, next) {
     stream.pipe(res);
 });
 
+
 // 集成ueditor
-app.use("/ueditor/ue", ueditor(path.join(__dirname, 'public'), function (req, res, next) {
+app.use("/ueditor/ue", ueditor(settings.PUBLIC_PATH, function (req, res, next) {
+
     var imgDir = '/upload/images/ueditor/' //默认上传地址为图片
     var ActionType = req.query.action;
     if (ActionType === 'uploadimage' || ActionType === 'uploadfile' || ActionType === 'uploadvideo') {
@@ -219,7 +221,6 @@ app.use("/ueditor/ue", ueditor(path.join(__dirname, 'public'), function (req, re
     }
     //客户端发起图片列表请求
     else if (ActionType === 'listimage') {
-
         res.ue_list(imgDir); // 客户端会列出 dir_url 目录下的所有图片
     }
     // 客户端发起其它请求

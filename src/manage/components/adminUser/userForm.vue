@@ -1,40 +1,78 @@
 <template>
     <div class="dr-adminUserForm">
-        <el-dialog width="35%" size="small" title="填写用户信息" :visible.sync="dialogState.show" :close-on-click-modal="false">
+        <el-dialog width="75%" size="small" title="填写用户信息" :visible.sync="dialogState.show" :close-on-click-modal="false">
             <el-form :model="dialogState.formData" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
-                <el-form-item label="用户名" prop="userName">
-                    <el-input size="small" v-model="dialogState.formData.userName"></el-input>
-                </el-form-item>
-                <el-form-item label="姓名" prop="name">
-                    <el-input size="small" v-model="dialogState.formData.name"></el-input>
-                </el-form-item>
-                <el-form-item label="密码" prop="password">
-                    <el-input size="small" type="password" v-model="dialogState.formData.password"></el-input>
-                </el-form-item>
-                <el-form-item label="确认密码" prop="confirmPassword">
-                    <el-input size="small" type="password" v-model="dialogState.formData.confirmPassword"></el-input>
-                </el-form-item>
-                <el-form-item label="用户组" prop="group">
-                    <el-select size="small" v-model="dialogState.formData.group" placeholder="请选择用户组">
-                        <el-option :key="index" v-for="(group,index) in groups" :label="group.name" :value="group._id"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="电话" prop="phoneNum">
-                    <el-input size="small" v-model="dialogState.formData.phoneNum"></el-input>
-                </el-form-item>
-                <el-form-item label="邮箱" prop="email">
-                    <el-input size="small" v-model="dialogState.formData.email"></el-input>
-                </el-form-item>
-                <el-form-item label="有效" prop="enable">
-                    <el-switch on-text="是" off-text="否" v-model="dialogState.formData.enable"></el-switch>
-                </el-form-item>
-                <el-form-item label="备注" prop="comments">
-                    <el-input size="small" type="textarea" v-model="dialogState.formData.comments"></el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button size="medium" type="primary" @click="submitForm('ruleForm')">{{dialogState.edit ? '更新' : '保存'}}</el-button>
-                    <el-button size="medium" @click="resetForm('ruleForm')">重置</el-button>
-                </el-form-item>
+
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <el-form-item label="用户名" prop="userName">
+                            <el-input size="small" v-model="dialogState.formData.userName"></el-input>
+                        </el-form-item>
+                        <el-form-item label="姓名" prop="name">
+                            <el-input size="small" v-model="dialogState.formData.name"></el-input>
+                        </el-form-item>
+
+                        <el-form-item label="修改密码" v-if="dialogState.formData.password != ''">
+                            <el-switch
+                                    v-model="bChangePass"
+                                    active-color="#13ce66"
+                                    inactive-color="#ff4949">
+                            </el-switch>
+                        </el-form-item>
+
+
+                        <el-form-item label="新密码" prop="password" v-if="bShowPassEdit">
+                            <el-input size="small" type="password" v-model="dialogState.formData.password"></el-input>
+                        </el-form-item>
+                        <el-form-item label="确认密码" prop="confirmPassword" v-if="bShowPassEdit">
+                            <el-input size="small" type="password" v-model="dialogState.formData.confirmPassword"></el-input>
+                        </el-form-item>
+
+                        <el-form-item label="用户组" prop="group">
+                            <el-select size="small" v-model="dialogState.formData.group" placeholder="请选择用户组">
+                                <el-option :key="index" v-for="(group,index) in groups" :label="group.name" :value="group._id"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="电话" prop="phoneNum">
+                            <el-input size="small" v-model="dialogState.formData.phoneNum"></el-input>
+                        </el-form-item>
+                        <el-form-item label="邮箱" prop="email">
+                            <el-input size="small" v-model="dialogState.formData.email"></el-input>
+                        </el-form-item>
+
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="头像" prop="logo">
+                            <el-upload
+                                    class="avatar-uploader"
+                                    action="/system/upload?type=images"
+                                    :show-file-list="false"
+                                    :on-success="handleAvatarSuccess"
+                                    :before-upload="beforeAvatarUpload">
+                                <img v-if="dialogState.formData.logo" :src="dialogState.formData.logo" class="avatar" style="width: 120px">
+                                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                            </el-upload>
+                        </el-form-item>
+
+                        <el-form-item label="有效" prop="enable">
+                            <el-switch on-text="是" off-text="否" v-model="dialogState.formData.enable"></el-switch>
+                        </el-form-item>
+                        <el-form-item label="备注" prop="comments">
+                            <el-input size="small" type="textarea" v-model="dialogState.formData.comments"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <el-row :gutter="20">
+                    <el-col :span="2"></el-col>
+                    <el-col :span="20" style="text-align: right">
+                        <el-form-item>
+                        <el-button size="medium" type="primary" @click="submitForm('ruleForm')">{{dialogState.edit ? '更新' : '保存'}}</el-button>
+                        <el-button size="medium" @click="resetForm('ruleForm')">重置</el-button>
+                    </el-form-item>
+                    </el-col>
+                    <el-col :span="2"></el-col>
+                </el-row>
             </el-form>
         </el-dialog>
     </div>
@@ -49,9 +87,15 @@ export default {
         dialogState: Object,
         groups: Array
     },
-    data() {
+    computed: {
+        bShowPassEdit () {
+            return this.$data.bChangePass || this.$props.dialogState.formData.password == '';
+        }
+    },
 
+    data() {
         return {
+            bChangePass: false,
             rules: {
                 userName: [{
                     required: true,
@@ -116,7 +160,7 @@ export default {
                     trigger: 'change'
                 }],
                 phoneNum: [{
-                    required: true,
+                    required: false,
                     message: '请输入正确的手机号',
                     trigger: 'blur'
                 }, {
@@ -130,7 +174,7 @@ export default {
                     trigger: 'blur'
                 }],
                 email: [{
-                    required: true,
+                    required: false,
                     message: '请填写邮箱',
                     trigger: 'blur'
                 }, {
@@ -153,12 +197,35 @@ export default {
                     trigger: 'blur'
                 }]
             }
-        };
+        };q
     },
     methods: {
+
+        handleAvatarSuccess(res, file) {
+            let imageUrl = res;
+            this.$set(this.$props.dialogState.formData, 'logo', imageUrl);
+//            this.$props.dialogState.formData.logo = imageUrl;
+        },
+
+        beforeAvatarUpload(file) {
+            const isJPG = file.type === 'image/jpeg';
+            const isPNG = file.type === 'image/png';
+            const isGIF = file.type === "image/gif";
+            const isLt2M = file.size / 1024 / 1024 < 2;
+
+            if (!isJPG && !isPNG && !isGIF) {
+                this.$message.error('上传头像图片只能是 JPG 格式!');
+            }
+            if (!isLt2M) {
+                this.$message.error('上传头像图片大小不能超过 2MB!');
+            }
+            return (isJPG || isPNG || isGIF) && isLt2M;
+        },
+
         confirm() {
             this.$store.dispatch('hideAdminUserForm')
         },
+
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
