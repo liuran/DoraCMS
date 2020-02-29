@@ -24,7 +24,6 @@ class AppBootHook {
     }
 
     async willReady() {
-
         // 请将你的应用项目中 app.beforeStart 中的代码置于此处。
     }
 
