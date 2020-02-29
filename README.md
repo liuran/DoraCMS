@@ -1,116 +1,151 @@
-# DoraCMS 2.0.2
+# DoraCMS 2.1.3
 
-![DoraCMS](http://7xkrk4.com1.z0.glb.clouddn.com/doracms2.jpg "DoraCMS")
+![DoraCMS](https://www.html-js.cn/upload/images/ueditor/1041325089330696192.png "DoraCMS")
 
-## 2.0.2版本更新
-1、升级log4js到最新版本
+## 2.1.3 版本更新
+1、优化了代码整体的目录结构 ++[重要]++  
 
-2、前台后台实现懒加载
+2、修复了后台文章列表编辑时文章作者和文章分类无法带出的问题  
 
-3、优化管理界面首页布局，增加权限预览
+3、重构了服务端代码，使其具有前后台api分离的能力 ++[重要]++  
 
-4、优化了后台导航交互
+4、支持最新稳定版nodejs（已通过 nodejs v10.15.0测试）++[重要]++  
 
-5、修复后台更改分页数pageSize，查询结果不变的问题
+5、优化打包脚本，npm run build 执行速度提升30%  
 
-6、修复某些情况下，后台查询关键字后，分页显示错误的问题
+6、优化开发模式下修改文件后的自动重启速度  
 
-7、修复某些情况下，数据备份压缩包内容为空的问题 (nodejs 需升级到 v8.1.0或以上)
+7、默认redis开关关闭，可以不开启。 ++[重要]++  
 
-8、优化前台个人中心布局，添加修改用户头像功能
+8、修复了一些其他bug  
 
-9、登录，注册，搜索支持回车键
 
-10、修复管理员管理中点击编辑按钮后，datatable中group清空的问题
 
-11、其它bug修复
 
-## 更新方法：
+注意：
+1、如果在开发环境下，只涉及到服务端调试，请使用：
+```javascript
+npm run server  
+```
 
-1、checkout 最新 2.0.2 代码
+如果是普通调试，依然是
+```javascript
+npm run dev
+```
+2、api开发请按照当前代码中的规范，开发完成后执行生成api文档：
+```javascript
+npm run makePrdDoc
+```
 
-2、删除 node_modules,重新安装依赖包
-
-3、启动数据库，执行npm run dev
-
+通过如下方式访问
+```javascript
+http://localhost:8080/apidoc
+```
 
 ## 说明
 
-DoraCMS 使用的技术栈：
+### DoraCMS 使用的技术栈：
 
+```
 1、vue + vuex + vue-router 全家桶
-
 2、webpack 2
+3、nodejs 10.15.0 + express 4
+4、mongodb 4+
+```
 
-3、nodejs 8.1 + express 4
+演示地址： [前端开发俱乐部](https://www.html-js.cn)  
 
-4、mongodb 3+
+后台登录： https://www.html-js.cn/dr-admin  
+测试账号：doracms/123456  
 
-演示地址： [前端开发俱乐部](https://www.html-js.cn)
-后台登录： https://www.html-js.cn/dr-admin     测试账号：doracms/123456
+ [DoraCMS 2.1.3 尝鲜体验](https://www.html-js.cn/details/VmnGNiF4S.html)   
 
-开发文档： [前端内容管理框架 DoraCMS2.0 开发文档](https://www.html-js.cn/details/ryn2kSWqZ.html)   
-生产部署教程： [DoraCMS2.0 linux部署(生产环境)教程](https://www.html-js.cn/details/ry4-B-hkf.html)  
+ [DoraCMS v2.1.2 Docker 版本（生产环境）](https://www.html-js.cn/details/Bkw5AepT4.html)  
 
 
 ## 目录结构
 
-```
+```javascript
 ├─build // webpack 相关配置文件
 │
-├─configs // 配置文件
-│  │
-│  └─logConfig.js  // 日志配置文件
-│
-├─logs // 日志目录
-│
-├─dist  // webpack 生成文档存放目录
-│  │
-│  ├─server
-│  │
-│  └─static
-│      ├─css
-│      │
-│      ├─images
-│      │
-│      ├─img
-│      │
-│      └─js
-│
-├─server    // 服务端目录
-│  │
-│  ├─lib    // 核心层
-│  │
-│  └─routes // 路由文件
-│
-├─src           // 客户端程序目录
-│  │
-│  ├─api        // api 配置文件
-│  │
-│  ├─filters    // 过滤器
+├─client // 客户端文件(前台/后台)
 │  │
 │  ├─index      // 前台组件
 │  │
 │  ├─manage     // 后台组件
 │  │
-│  ├─template   // 初始模版
-│  │
-│  └─utils      // 实用工具
+│  └─template   // 初始模版
 │
-└─utils
-    ├─middleware // 中间件
-    │
-    ├─authPower.js // 资源鉴权
-    │
-    ├─authSession.js // session 鉴权
-    │
-    ├─authToken.js // token鉴权
-    │
-    ├─logUtil.js // 日志配置
-    │
-    ├─settings.js // 关键信息配置
-    │
-    └─validatorUtil.js // 信息校验
+├─databak // 默认数据备份目录
+│
+│ 
+├─logs // 日志目录
+│
+├─public  // 静态文件目录
+│  │
+│  ├─admin // 后台vue编译后的文件目录
+│  │
+│  ├─apidoc // api文档目录
+│  │
+│  ├─plugins // 前台依赖的相关组件
+│  │
+│  ├─themes // 皮肤目录
+│  │
+│  ├─ueditor // ueditor插件目录
+│  │
+│  ├─upload // 文件上传目录
+│  │
+│  └─vendor // 后台静态dll目录
+│
+│
+├─server    // 服务端目录
+│  │
+│  ├─bootstrap   // 前台渲染相关
+│  │
+│  ├─configs   // 系统配置
+│  │
+│  ├─locales   // 国际化
+│  │
+│  ├─middleware   // 中间件
+│  │
+│  │
+│  ├─lib    // 核心层
+│  │  ├─contorller   // 控制器
+│  │  │
+│  │  ├─model   // 数据模型
+│  │  │
+│  │  ├─service   // 数据库操作
+│  │  │
+│  │  └─utils
+│  │     ├─cache // redis缓存
+│  │     │
+│  │     ├─memoryCache // 内存缓存
+│  │     │
+│  │     ├─authPower.js // 资源鉴权
+│  │     │
+│  │     ├─authSession.js // session 鉴权
+│  │     │
+│  │     ├─authToken.js // token鉴权
+│  │     │
+│  │     ├─mime.js // 文件类型
+│  │     │
+│  │     ├─siteFunc.js // 公共方法
+│  │     │
+│  │     └─validatorUtil.js // 信息校验
+│  │
+│  │
+│  └─routers   // 路由
+│  
+│
+│
+└─views          // 前台模板
+   │
+   ├─dorawhite   // 主题目录
+   │
+   ├─admin.html    // 后台管理模板
+   │
+   └─adminUserLogin.html    // 后台登录模板
+ 
 
 ```
 
@@ -118,43 +153,86 @@ DoraCMS 使用的技术栈：
 
 
 
-## 准备工作:
-安装 NodeJS:
+## 开发环境准备工作:
+
+### 安装最新稳定版 NodeJS:
+```javascript
 https://nodejs.org/zh-cn/
-
-安装 Mongodb:
-https://www.mongodb.com/download-center#community
-
-```shell
-# 初始化数据库
-$ npm init
-
-# 安装依赖
-$ npm install
-
-# 开发模式
-$ npm run dev
-
-# 生产模式
-$ npm run build
-
-# 启动(需先生成静态文件)
-$ npm run start
-
-# 备份数据库
-$ npm dump
 ```
 
-首页
+
+### 安装并启动 Mongodb (++mongodb不要设置密码访问++)
+```javascript
+https://www.mongodb.com/download-center#community
+```
+
+### 安装全局依赖
+```javascript
+npm install pm2 -g   // nodejs进程守护
+npm install apidoc -g  // api 文档生成
+npm install gulp -g  // 脚本构建
+npm install nodemon -g  // nodejs 代码监控
+```
+
+
+### 安装本系统依赖（代码根目录）
+```javascript
+npm install
+```
+
+### 初始化数据
+```javascript
+npm run init
+```
+
+### 设置环境变量（以mac为例，修改 .bash_profile文件）
+
+```javascript
+vi ~/.bash_profile
+
+export NODE_ENV=development
+MONGODBPATH=/Users/Dora/Documents/dora/soft/mongodb/bin
+PATH="${MONGODBPATH}:${PATH}"
+export PATH
+
+source ~/.bash_profile
+```
+
+> 以上步骤做了两件事情：  
+1、设置nodejs环境变量为 development,生产环境记得改为 production  
+2、将mongodb bin 目录添加到全局变量中，便于在终端的任何位置执行mongo脚本,注意改成自己安装mongodb的实际路径  
+
+
+### 开发模式启动
+```javascript
+npm run dev
+```
+### 生产模式打包
+```javascript
+npm run build
+```
+### 生产模式启动(进入代码根目录执行)
+```javascript
+node server.js
+```
+
+### 首页
+```javascript
 http://localhost:8080
+```
 
-登录
+### 后台登录
+```javascript
 http://localhost:8080/dr-admin
+登录账号：doramart/123456    doracms/123456
+```
 
-# 捐赠
+## 捐赠
 如果你发现DoraCMS很有用，可以请生哥喝杯咖啡(⊙o⊙)哦
-<img width="650" src="http://7xkrk4.com1.z0.glb.clouddn.com/payme.jpg" alt="">
+<img width="650" src="http://cdn.html-js.cn/payme.jpg" alt="">
 
 # LICENSE
 
 MIT
+
+

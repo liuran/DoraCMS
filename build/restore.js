@@ -1,12 +1,30 @@
 // 导入DB数据
 require('shelljs/global');
+require('module-alias/register')
+const muri = require('muri')
+const settings = require('@configs/settings');
 
-const setting = require("../utils/settings");
+const dbforder = 'doracms2';
 
-const name = "DoraDbData";
-const time = ".20171117";
-if(setting.HOST.match(/127.0.0.1|localhost/)){
-    exec(`mongorestore  --gzip --archive=./data/${name + time}.gz `).stdout;
-}else{
-    exec(`mongorestore -h ${setting.HOST} --port ${setting.PORT} -u ${setting.USERNAME} -p ${setting.PASSWORD}  --gzip --archive=./data/${name + time}.gz `).stdout;
+const mongoUri = settings.mongo_connection_uri
+const parsedUri = muri(mongoUri)
+const parameters = []
+
+if (parsedUri.hosts && parsedUri.hosts.length) {
+    const host = parsedUri.hosts[0]
+    parameters.push(`-h ${host.host}`, `--port ${host.port}`)
 }
+
+if (parsedUri.auth) {
+    parameters.push(`-u "${parsedUri.auth.user}"`, `-p "${parsedUri.auth.pass}"`)
+}
+
+if (parsedUri.db) {
+    parameters.push(`-d "${parsedUri.db}"`)
+}
+
+parameters.push(`--drop ./databak/${dbforder}/${parsedUri.db}`)
+
+const cmd = `mongorestore ${parameters.join(' ')}`
+
+exec(cmd).stdout;

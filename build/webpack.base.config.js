@@ -5,17 +5,20 @@ const isProd = process.env.NODE_ENV === 'production'
 
 const config = {
     performance: {
-        maxEntrypointSize: 300000,
-        hints: isProd ? 'warning' : false
+        hints: "warning", // 枚举
+        maxAssetSize: 30000000, // 整数类型（以字节为单位）
+        maxEntrypointSize: 50000000, // 整数类型（以字节为单位）
+        assetFilter: function (assetFilename) {
+            // 提供资源文件名的断言函数
+            return assetFilename.endsWith('.css') || assetFilename.endsWith('.js');
+        }
     },
     entry: {
-        app: './src/entry-client.js',
-        admin: './src/admin.js',
-        vendor: ['./src/polyfill']
+        admin: './client/manage/admin.js'
     },
     output: {
-        path: path.resolve(__dirname, '../dist'),
-        publicPath: '/',
+        path: path.resolve(__dirname, '../public/admin'),
+        publicPath: '/admin/',
         filename: 'static/js/[name].[chunkhash:7].js',
         chunkFilename: 'static/js/[name].[chunkhash:7].js',
     },
@@ -25,15 +28,8 @@ const config = {
             path.join(__dirname, '../node_modules')
         ],
         alias: {
-            '@': path.join(__dirname, '..', 'src'),
-            'scss_vars': '@/manage/assets/styles/vars.scss',
-            '~src': path.resolve(__dirname, '../src'),
-            '~api': path.resolve(__dirname, '../src/api/index-client'),
-            '~server': path.resolve(__dirname, '../server'),
-            '~mixins': path.resolve(__dirname, '../src/mixins'),
-            '~utils': path.resolve(__dirname, '../src/utils'),
-            'api-config': path.resolve(__dirname, '../src/api/config-client'),
-            'create-route': './create-route-client.js'
+            '@': path.join(__dirname, '../client/manage'),
+            '~server': path.resolve(__dirname, '../server')
         }
     },
     resolveLoader: {
@@ -59,6 +55,6 @@ const config = {
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
         })
     ]
-}
+};
 !isProd && config.plugins.push(new FriendlyErrorsPlugin())
 module.exports = config

@@ -3,53 +3,72 @@ const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const SWPrecachePlugin = require('sw-precache-webpack-plugin')
-
-const srcDir = path.resolve(__dirname, '../dist/').replace(/\\/g, "\/")
+const HappyPack = require('happypack');
+const os = require('os');
+const happyThreadPool = HappyPack.ThreadPool({
+    size: os.cpus().length
+});
+const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');
+const srcDir = path.resolve(__dirname, '../public/admin/').replace(/\\/g, "\/")
 const prefixMulti = {}
-prefixMulti[srcDir] = ''
+prefixMulti[srcDir] = '';
 
 module.exports = {
     devtool: false,
     module: {
+        noParse: /node_modules\/(element-ui\.js)/,
         rules: [{
-            test: /\.(jpg|png|gif|eot|svg|ttf|woff|woff2)$/,
-            loader: 'url-loader',
-            query: {
-                limit: 10000,
-                name: 'static/img/[name].[hash:7].[ext]'
-            }
-        }, {
-            test: /\.css$/,
-            loader: ExtractTextPlugin.extract(['css-loader', 'postcss-loader'])
-        }, {
-            test: /\.less/,
-            loader: ExtractTextPlugin.extract(['css-loader', 'postcss-loader', 'less-loader'])
-        }]
+            test: /\.js$/,
+            //把对.js 的文件处理交给id为happyBabel 的HappyPack 的实例执行
+            loader: 'happypack/loader?id=happyBabel',
+            //排除node_modules 目录下的文件
+            exclude: /node_modules/,
+            include: path.resolve(__dirname, 'src')
+        }, ]
     },
     plugins: [
+        new HappyPack({
+            //用id来标识 happypack处理那里类文件
+            id: 'happyBabel',
+            //如何处理  用法和loader 的配置一样
+            loaders: [{
+                loader: 'babel-loader?cacheDirectory=true',
+            }],
+            //共享进程池
+            threadPool: happyThreadPool,
+            //允许 HappyPack 输出日志
+            verbose: true,
+        }),
+
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: '"production"'
             }
         }),
+
         new ExtractTextPlugin('static/css/[name].[hash:7].css'),
+
+        new ParallelUglifyPlugin({
+            test: /\.(js)($|\?)/i,
+            cacheDir: '.cache/',
+            workerCount: 4,
+            uglifyES: {
+                output: {
+                    comments: false,
+                    beautify: false
+                },
+                compress: {
+                    warnings: false,
+                    drop_console: true,
+                    collapse_vars: true,
+                    reduce_vars: true
+                }
+            }
+        }),
+
         new webpack.optimize.CommonsChunkPlugin({
-            name: 'vendor',
-            minChunks: function (module, count) {
-                return (module.resource && /\.js$/.test(module.resource) && module.resource.indexOf('node_modules') > 0)
-            }
-        }),
-        new webpack.optimize.CommonsChunkPlugin({ name: 'manifest', chunks: ['vendor'] }),
-        new webpack.optimize.UglifyJsPlugin({
-            compressor: {
-                warnings: false
-            },
-            output: {
-                comments: false
-            }
-        }),
-        new webpack.LoaderOptionsPlugin({
-            minimize: true
+            name: "manifest",
+            minChunks: Infinity
         }),
         new SWPrecachePlugin({
             cacheId: 'doracms-vue2-ssr',
@@ -60,20 +79,16 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             chunks: [
-                'manifest', 'vendor', 'app',
-            ],
-            filename: 'server.html',
-            template: 'src/template/server.html',
-            inject: true,
-        }),
-        new HtmlWebpackPlugin({
-            chunks: [
-                'manifest', 'vendor', 'admin',
+                'manifest', 'vendor', 'element', 'admin',
             ],
             filename: 'admin.html',
-            template: 'src/template/admin.html',
-            manageCates: '<%= manageCates%>',
-            inject: true,
-        })
+            template: 'client/template/admin.html',
+            manageCates: '{{manageCates}}',
+            inject: true
+        }),
+        new webpack.DllReferencePlugin({
+            context: __dirname,
+            manifest: require("../public/vendor/vendor-manifest.json")
+        }),
     ]
 }

@@ -55,20 +55,20 @@
             //    'anchor':'', 'undo':''
             //}
 
-            //语言配置项,默认是zh-cn。有需要的话也可以使用如下这样的方式来自动多语言切换，当然，前提条件是lang文件夹下存在对应的语言文件：
-            //lang值也可以通过自动获取 (navigator.language||navigator.browserLanguage ||navigator.userLanguage).toLowerCase()
-            //,lang:"zh-cn"
-            //,langPath:URL +"lang/"
+        //语言配置项,默认是zh-cn。有需要的话也可以使用如下这样的方式来自动多语言切换，当然，前提条件是lang文件夹下存在对应的语言文件：
+        //lang值也可以通过自动获取 (navigator.language||navigator.browserLanguage ||navigator.userLanguage).toLowerCase()
+        //,lang:"zh-cn"
+        //,langPath:URL +"lang/"
 
-            //主题配置项,默认是default。有需要的话也可以使用如下这样的方式来自动多主题切换，当然，前提条件是themes文件夹下存在对应的主题文件：
-            //现有如下皮肤:default
-            //,theme:'default'
-            //,themePath:URL +"themes/"
+        //主题配置项,默认是default。有需要的话也可以使用如下这样的方式来自动多主题切换，当然，前提条件是themes文件夹下存在对应的主题文件：
+        //现有如下皮肤:default
+        //,theme:'default'
+        //,themePath:URL +"themes/"
 
-            //,zIndex : 900     //编辑器层级的基数,默认是900
+        //,zIndex : 900     //编辑器层级的基数,默认是900
 
-            //针对getAllHtml方法，会在对应的head标签中增加该编码设置。
-            //,charset:"utf-8"
+        //针对getAllHtml方法，会在对应的head标签中增加该编码设置。
+        //,charset:"utf-8"
 
             //若实例化编辑器的页面手动修改的domain，此处需要设置为true
             //,customDomain:false
@@ -100,10 +100,10 @@
 
             //,autoClearEmptyNode : true //getContent时，是否删除空的inlineElement节点（包括嵌套的情况）
 
-            //启用自动保存
-            //,enableAutoSave: true
-            //自动保存间隔时间， 单位ms
-            //,saveInterval: 500
+        //启用自动保存
+        //,enableAutoSave: true
+        //自动保存间隔时间， 单位ms
+        //,saveInterval: 500
 
             //,fullscreen : false //是否开启初始化时即全屏，默认关闭
 
@@ -409,6 +409,7 @@
             hr: [],
             i: ['class', 'style'],
             img: ['src', 'alt', 'title', 'width', 'height', 'id', '_src', 'loadingclass', 'class', 'data-latex'],
+            iframe: ['class', 'style', 'src', 'frameborder', 'width', 'height'],
             ins: ['datetime'],
             li: ['class', 'style'],
             mark: [],

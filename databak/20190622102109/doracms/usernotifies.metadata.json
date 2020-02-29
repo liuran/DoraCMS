@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"doracms.usernotifies"},{"v":2,"key":{"date":-1},"name":"date_-1","ns":"doracms.usernotifies","background":true}],"uuid":"ed727757343549a29ca5b4281b0d984e"}

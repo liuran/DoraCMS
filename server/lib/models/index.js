@@ -1,18 +1,18 @@
 const mongoose = require('mongoose');
-const isProd = process.env.NODE_ENV === 'production'
-const { settings } = require('../../../utils');
+const settings = require('@configs/settings');
+const fs = require('fs');
+const path = require('path');
+var modelsPath = path.resolve(__dirname, './');
 
-if (!isProd) {
-    mongoose.connect("mongodb://localhost/doracms2", { useMongoClient: true });
-} else {
-    mongoose.connect('mongodb://' + settings.USERNAME + ':' + settings.PASSWORD + '@' + settings.HOST + ':' + settings.PORT + '/' + settings.DB + '', { useMongoClient: true });
-}
+mongoose.connect(settings.mongo_connection_uri, {
+    useMongoClient: true
+});
 
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 
 db.once('open', () => {
-    console.log('连接数据成功')
+    console.log('connect mongodb success')
 })
 
 db.on('error', function (error) {
@@ -22,22 +22,17 @@ db.on('error', function (error) {
 
 db.on('close', function () {
     console.log('数据库断开，重新连接数据库');
-    // mongoose.connect(config.url, {server:{auto_reconnect:true}});
 });
 
 
-exports.AdminUser = require('./AdminUser');
-exports.User = require('./User');
-exports.AdminGroup = require('./AdminGroup');
-exports.AdminResource = require('./AdminResource');
-exports.ContentCategory = require('./ContentCategory');
-exports.Content = require('./Content');
-exports.ContentTag = require('./ContentTag');
-exports.Message = require('./Message');
-exports.UserNotify = require('./UserNotify');
-exports.Notify = require('./Notify');
-exports.SystemConfig = require('./SystemConfig');
-exports.DataOptionLog = require('./DataOptionLog');
-exports.SystemOptionLog = require('./SystemOptionLog');
-exports.Ads = require('./Ads');
-exports.AdsItems = require('./AdsItems');
+fs.readdirSync(modelsPath).forEach(function (name) {
+    if (path.extname(name) !== '') {
+        name = path.basename(name, '.js');
+        if (name != 'index') {
+            let currentName = name.substr(0, 1).toUpperCase() + name.slice(1);
+            exports[currentName] = require(path.resolve(modelsPath, name));
+        }
+    }
+});
+
+//DoraModelEnd
